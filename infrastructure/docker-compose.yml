@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: pie-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: pie
+      POSTGRES_USER: pie
+      POSTGRES_PASSWORD: pie_dev_password
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - pie_postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pie -d pie"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pie_postgres_data:
