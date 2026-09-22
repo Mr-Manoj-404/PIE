@@ -30,6 +30,16 @@ public class PieAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
+        /*
+         * CORS preflight requests do not contain the PIE authentication token.
+         * Let Spring's CORS handling process OPTIONS requests without attempting
+         * authentication.
+         */
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token =
                 request.getHeader("X-PIE-Token");
 
